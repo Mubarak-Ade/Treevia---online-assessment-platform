@@ -1,0 +1,19 @@
+{
+  "name": "treevia",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.18.2",
+  "scripts": {
+    "dev": "pnpm --parallel --filter './apps/*' dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "start": "pnpm --filter @treevia/api start",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f db",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  }
+}
