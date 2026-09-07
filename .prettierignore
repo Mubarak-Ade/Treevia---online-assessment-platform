@@ -1,0 +1,19 @@
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# Dependencies
+node_modules/
+
+# Lock files (managed by package managers)
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Generated DB migration files
+**/migrations/
+
+# Environment files
+.env*

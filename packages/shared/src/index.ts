@@ -1,5 +1,5 @@
 export type HealthResponse = {
-  status: "ok";
-  database: "connected" | "unavailable";
-  timestamp: string;
+    status: 'ok';
+    database: 'connected' | 'unavailable';
+    timestamp: string;
 };
