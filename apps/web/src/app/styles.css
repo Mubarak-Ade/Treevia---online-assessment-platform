@@ -1,26 +1,102 @@
 @import 'tailwindcss';
 
-:root {
-    font-family: Inter, system-ui, sans-serif;
-    color: #18392b;
-    background: #f4f8f3;
+@layer base {
+    :root {
+        --background: #f8fafc;
+        --foreground: #0f172a;
+
+        --card: #ffffff;
+        --card-foreground: #0f172a;
+
+        --popover: #ffffff;
+        --popover-foreground: #0f172a;
+
+        /* Treevia Brand Green Palette */
+        --primary: #15803d;
+        --primary-foreground: #ffffff;
+        --primary-hover: #166534;
+        --primary-deep: #14532d;
+        --primary-fresh: #22c55e;
+        --primary-soft: #dcfce7;
+
+        --secondary: #f1f5f9;
+        --secondary-foreground: #0f172a;
+
+        --muted: #f1f5f9;
+        --muted-foreground: #64748b;
+
+        --accent: #f1f5f9;
+        --accent-foreground: #0f172a;
+
+        --destructive: #dc2626;
+        --destructive-foreground: #ffffff;
+
+        --border: #e2e8f0;
+        --border-strong: #cbd5e1;
+        --input: #e2e8f0;
+        --ring: #15803d;
+
+        --radius: 0.5rem;
+        --radius-sm: 0.375rem;
+        --radius-md: 0.5rem;
+        --radius-lg: 0.75rem;
+        --radius-xl: 1rem;
+    }
+
+    .dark {
+        --background: #090d16;
+        --foreground: #f8fafc;
+
+        --card: #0f172a;
+        --card-foreground: #f8fafc;
+
+        --popover: #0f172a;
+        --popover-foreground: #f8fafc;
+
+        --primary: #22c55e;
+        --primary-foreground: #090d16;
+        --primary-hover: #16a34a;
+
+        --secondary: #1e293b;
+        --secondary-foreground: #f8fafc;
+
+        --muted: #1e293b;
+        --muted-foreground: #94a3b8;
+
+        --accent: #1e293b;
+        --accent-foreground: #f8fafc;
+
+        --destructive: #ef4444;
+        --destructive-foreground: #ffffff;
+
+        --border: #1e293b;
+        --border-strong: #334155;
+        --input: #1e293b;
+        --ring: #22c55e;
+    }
 }
+
 body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     margin: 0;
 }
-main {
-    max-width: 720px;
-    margin: 16vh auto;
-    padding: 2rem;
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
 }
-h1 {
-    font-size: clamp(2.4rem, 7vw, 4.8rem);
-    line-height: 1.05;
-    margin: 0.4rem 0 1.5rem;
+::-webkit-scrollbar-track {
+    background: transparent;
 }
-.eyebrow {
-    color: #477f57;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
