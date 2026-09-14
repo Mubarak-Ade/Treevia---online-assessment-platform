@@ -1,102 +1,227 @@
 @import 'tailwindcss';
 
-@layer base {
-    :root {
-        --background: #f8fafc;
-        --foreground: #0f172a;
+@theme {
+  /* ─── Brand ─────────────────────────────────────────── */
+  --color-brand: #15803d;
+  --color-brand-hover: #166534;
+  --color-brand-deep: #14532d;
+  --color-brand-fresh: #22c55e;
+  --color-brand-soft: #dcfce7;
+  --color-brand-warm: #f0fdf4;
 
-        --card: #ffffff;
-        --card-foreground: #0f172a;
+  /* ─── Background & Foreground ──────────────────────── */
+  --color-background: #f8fafc;
+  --color-foreground: #0f172a;
 
-        --popover: #ffffff;
-        --popover-foreground: #0f172a;
+  /* ─── Surface ──────────────────────────────────────── */
+  --color-card: #ffffff;
+  --color-card-foreground: #0f172a;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #0f172a;
 
-        /* Treevia Brand Green Palette */
-        --primary: #15803d;
-        --primary-foreground: #ffffff;
-        --primary-hover: #166534;
-        --primary-deep: #14532d;
-        --primary-fresh: #22c55e;
-        --primary-soft: #dcfce7;
+  /* ─── Primary ──────────────────────────────────────── */
+  --color-primary: #15803d;
+  --color-primary-foreground: #ffffff;
+  --color-primary-hover: #166534;
+  --color-primary-deep: #14532d;
+  --color-primary-fresh: #22c55e;
+  --color-primary-soft: #dcfce7;
 
-        --secondary: #f1f5f9;
-        --secondary-foreground: #0f172a;
+  /* ─── Secondary ────────────────────────────────────── */
+  --color-secondary: #f1f5f9;
+  --color-secondary-foreground: #0f172a;
 
-        --muted: #f1f5f9;
-        --muted-foreground: #64748b;
+  /* ─── Muted ────────────────────────────────────────── */
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #64748b;
 
-        --accent: #f1f5f9;
-        --accent-foreground: #0f172a;
+  /* ─── Accent ───────────────────────────────────────── */
+  --color-accent: #f1f5f9;
+  --color-accent-foreground: #0f172a;
 
-        --destructive: #dc2626;
-        --destructive-foreground: #ffffff;
+  /* ─── Destructive ──────────────────────────────────── */
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
 
-        --border: #e2e8f0;
-        --border-strong: #cbd5e1;
-        --input: #e2e8f0;
-        --ring: #15803d;
+  /* ─── Semantic Status ──────────────────────────────── */
+  --color-success: #22c55e;
+  --color-success-foreground: #14532d;
+  --color-success-soft: #dcfce7;
+  --color-warning: #f59e0b;
+  --color-warning-foreground: #78350f;
+  --color-warning-soft: #fef3c7;
+  --color-info: #3b82f6;
+  --color-info-foreground: #1e40af;
+  --color-info-soft: #dbeafe;
+  --color-error: #ef4444;
+  --color-error-foreground: #991b1b;
+  --color-error-soft: #fee2e2;
 
-        --radius: 0.5rem;
-        --radius-sm: 0.375rem;
-        --radius-md: 0.5rem;
-        --radius-lg: 0.75rem;
-        --radius-xl: 1rem;
-    }
+  /* ─── Border & Input ───────────────────────────────── */
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+  --color-input: #e2e8f0;
+  --color-ring: #15803d;
 
-    .dark {
-        --background: #090d16;
-        --foreground: #f8fafc;
+  /* ─── Radius ───────────────────────────────────────── */
+  --radius: 0.5rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
 
-        --card: #0f172a;
-        --card-foreground: #f8fafc;
+  /* ─── Fonts ────────────────────────────────────────── */
+  --font-family-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
-        --popover: #0f172a;
-        --popover-foreground: #f8fafc;
-
-        --primary: #22c55e;
-        --primary-foreground: #090d16;
-        --primary-hover: #16a34a;
-
-        --secondary: #1e293b;
-        --secondary-foreground: #f8fafc;
-
-        --muted: #1e293b;
-        --muted-foreground: #94a3b8;
-
-        --accent: #1e293b;
-        --accent-foreground: #f8fafc;
-
-        --destructive: #ef4444;
-        --destructive-foreground: #ffffff;
-
-        --border: #1e293b;
-        --border-strong: #334155;
-        --input: #1e293b;
-        --ring: #22c55e;
-    }
+  /* ─── Spacing ──────────────────────────────────────── */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
 }
 
+/* ─── Dark Theme (CSS class-based, driven by next-themes) ── */
+.dark {
+  --color-background: #090d16;
+  --color-foreground: #f8fafc;
+
+  --color-card: #0f172a;
+  --color-card-foreground: #f8fafc;
+
+  --color-popover: #0f172a;
+  --color-popover-foreground: #f8fafc;
+
+  --color-primary: #22c55e;
+  --color-primary-foreground: #090d16;
+  --color-primary-hover: #16a34a;
+  --color-primary-deep: #15803d;
+  --color-primary-soft: #14532d;
+  --color-brand-soft: #14532d;
+  --color-brand-warm: #0a1f14;
+
+  --color-secondary: #1e293b;
+  --color-secondary-foreground: #f8fafc;
+
+  --color-muted: #1e293b;
+  --color-muted-foreground: #94a3b8;
+
+  --color-accent: #1e293b;
+  --color-accent-foreground: #f8fafc;
+
+  --color-border: #1e293b;
+  --color-border-strong: #334155;
+  --color-input: #1e293b;
+  --color-ring: #22c55e;
+
+  --color-success-soft: #14532d;
+  --color-warning-soft: #78350f;
+  --color-info-soft: #1e3a5f;
+  --color-error-soft: #7f1d1d;
+}
+
+/* ─── Base ──────────────────────────────────────────── */
 body {
-    background-color: var(--background);
-    color: var(--foreground);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    margin: 0;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-family-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
 }
 
-/* Custom scrollbar */
+/* ─── Selection ──────────────────────────────────────── */
+::selection {
+  background-color: var(--color-brand-soft);
+  color: var(--color-brand-deep);
+}
+
+/* ─── Scrollbar ──────────────────────────────────────── */
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: transparent;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 9999px;
+  background: var(--color-border);
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+  background: var(--color-border-strong);
+}
+
+/* ─── Focus Visible ──────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+/* ─── Animations ─────────────────────────────────────── */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in {
+  animation: fade-in 200ms ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 300ms ease-out;
+}
+
+.animate-scale-in {
+  animation: scale-in 200ms ease-out;
+}
+
+/* ─── Utility Classes ────────────────────────────────── */
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+.shadow-xs {
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+.dark .shadow-xs {
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+}
+
+/* ─── Backdrop Blur Fallback ─────────────────────────── */
+@supports (backdrop-filter: blur(8px)) {
+  .backdrop-blur-md {
+    backdrop-filter: blur(12px);
+  }
+}
+
+/* ─── Print Styles ───────────────────────────────────── */
+@media print {
+  body {
+    background-color: #fff !important;
+    color: #000 !important;
+  }
 }

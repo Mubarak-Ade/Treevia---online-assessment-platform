@@ -19,7 +19,7 @@ export function HomeHeroSection() {
                         </p>
 
                         <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
-                            <Link to="/assessments/new/builder" className="w-full sm:w-auto">
+                            <Link to="/assessments/new" className="w-full sm:w-auto">
                                 <Button
                                     size="lg"
                                     className="w-full sm:w-auto h-12 px-6 bg-emerald-800 hover:bg-emerald-900 text-white font-semibold rounded-lg shadow-sm gap-2"

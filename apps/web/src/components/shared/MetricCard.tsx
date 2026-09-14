@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { TrendingUp, TrendingDown } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { TrendingUp, TrendingDown, CheckCircle, Info, BarChart3, List } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export interface MetricCardProps {
     title: string;
@@ -11,6 +13,10 @@ export interface MetricCardProps {
         positive?: boolean;
     };
     icon?: React.ReactNode;
+    iconColor?: string;
+    iconBg?: string;
+    progressValue?: number;
+    progressColor?: string;
     className?: string;
 }
 
@@ -20,6 +26,10 @@ export function MetricCard({
     subtext,
     trend,
     icon,
+    iconColor = 'text-emerald-700',
+    iconBg = 'bg-emerald-50',
+    progressValue,
+    progressColor = 'bg-emerald-500',
     className = '',
 }: MetricCardProps) {
     return (
@@ -28,7 +38,7 @@ export function MetricCard({
                 <div className="flex items-center justify-between">
                     <span className="text-xs font-medium text-slate-500">{title}</span>
                     {icon && (
-                        <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                        <div className={`w-8 h-8 rounded-lg ${iconBg} ${iconColor} flex items-center justify-center`}>
                             {icon}
                         </div>
                     )}
@@ -53,6 +63,19 @@ export function MetricCard({
                     )}
                 </div>
                 {subtext && <p className="mt-1 text-xs text-slate-500">{subtext}</p>}
+                    {progressValue !== undefined && (
+                    <div className="mt-3">
+                        <Progress
+                            value={progressValue}
+                            className={cn('h-1.5 [&_[data-slot=progress-indicator]]:', progressColor)}
+                        />
+                        <div className="flex justify-between mt-1">
+                            <span className={cn('text-[10px] font-medium', progressColor)}>
+                                {progressValue}%
+                            </span>
+                        </div>
+                    </div>
+                )}
             </CardContent>
         </Card>
     );

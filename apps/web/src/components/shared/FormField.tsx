@@ -3,7 +3,7 @@ import { Label } from '@/components/ui/label';
 
 export interface FormFieldProps {
     id?: string;
-    label?: string;
+    label?: React.ReactNode;
     description?: string;
     error?: string;
     required?: boolean;

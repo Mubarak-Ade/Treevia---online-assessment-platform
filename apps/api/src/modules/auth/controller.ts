@@ -109,7 +109,7 @@ export class AuthController {
             const user = await this.authService.getMe(userId);
 
             res.status(200).json({
-                user,
+                ...user,
             });
         } catch (error) {
             next(error);

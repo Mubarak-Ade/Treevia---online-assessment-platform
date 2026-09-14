@@ -9,7 +9,7 @@
         "start": "node dist/server.js",
         "typecheck": "tsc --noEmit",
         "db:generate": "drizzle-kit generate",
-        "db:push": "drizzle-kit push",
+        "db:migrate": "drizzle-kit migrate",
         "db:studio": "drizzle-kit studio"
     },
     "dependencies": {

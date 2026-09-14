@@ -12,12 +12,14 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/features/auth/authStore';
+import { useLogout } from '@/features/auth/useAuthMutations';
+import { useAuth } from '@/features/auth/auth.hook';
 
 export function EducatorLayout() {
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const location = useLocation();
-    const navigate = useNavigate();
-    const { user, logout } = useAuthStore();
+    const { mutate: logout } = useLogout();
+    const { user } = useAuth();
 
     // Close mobile menu on navigate
     React.useEffect(() => {
@@ -26,7 +28,6 @@ export function EducatorLayout() {
 
     const handleLogout = () => {
         logout();
-        navigate('/login', { replace: true });
     };
 
     const navItems = [
@@ -47,7 +48,7 @@ export function EducatorLayout() {
             <aside className="hidden lg:flex w-64 flex-col fixed inset-y-0 z-50 bg-white border-r border-slate-200">
                 {/* Brand */}
                 <div className="h-16 px-6 flex items-center justify-between border-b border-slate-200/80">
-                    <Link to="/dashboard" className="flex items-center gap-2.5">
+                    <Link to="/" className="flex items-center gap-2.5">
                         <div className="w-8 h-8 rounded-lg bg-emerald-700 flex items-center justify-center text-white shadow-xs">
                             <GraduationCap className="w-4 h-4" />
                         </div>
@@ -94,7 +95,7 @@ export function EducatorLayout() {
                         <p className="mt-1 text-xs text-emerald-800/80 leading-relaxed">
                             Create a timed test with questions and join code in minutes.
                         </p>
-                        <Link to="/assessments/new/builder">
+                        <Link to="/assessments/new">
                             <Button
                                 size="sm"
                                 className="mt-3 w-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs gap-1.5 font-medium shadow-xs"
@@ -157,7 +158,7 @@ export function EducatorLayout() {
                                 Student Portal
                             </Button>
                         </Link>
-                        <Link to="/assessments/new/builder">
+                        <Link to="/assessments/new">
                             <Button
                                 size="sm"
                                 className="bg-emerald-700 hover:bg-emerald-800 text-white text-xs gap-1.5 shadow-xs"

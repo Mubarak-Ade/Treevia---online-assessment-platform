@@ -15,6 +15,27 @@
       "when": 1788708126854,
       "tag": "0001_chunky_mystique",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789121213534,
+      "tag": "0002_brief_amazoness",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1789199260340,
+      "tag": "0003_outstanding_wrecking_crew",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1789411354220,
+      "tag": "0004_past_jackal",
+      "breakpoints": true
     }
   ]
 }

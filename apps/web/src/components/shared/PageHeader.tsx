@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Briefcase, Calendar } from 'lucide-react';
 import { Link } from 'react-router';
 
 export interface BreadcrumbItem {
@@ -14,6 +14,8 @@ export interface PageHeaderProps {
     actions?: React.ReactNode;
     children?: React.ReactNode;
     className?: string;
+    contextLabel?: string;
+    contextDescription?: string;
 }
 
 export function PageHeader({
@@ -23,6 +25,8 @@ export function PageHeader({
     actions,
     children,
     className = '',
+    contextLabel,
+    contextDescription,
 }: PageHeaderProps) {
     return (
         <div className={`space-y-4 pb-6 border-b border-slate-200 ${className}`}>
@@ -49,6 +53,26 @@ export function PageHeader({
                         );
                     })}
                 </nav>
+            )}
+
+            {(contextLabel || contextDescription) && (
+                <div className="flex items-center gap-2 text-xs text-slate-500">
+                    {contextLabel && (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-medium border border-emerald-200">
+                            <Calendar className="w-3 h-3" />
+                            {contextLabel}
+                        </span>
+                    )}
+                    {contextDescription && (
+                        <>
+                            <span className="text-slate-300">•</span>
+                            <span className="flex items-center gap-1">
+                                <Briefcase className="w-3 h-3" />
+                                {contextDescription}
+                            </span>
+                        </>
+                    )}
+                </div>
             )}
 
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

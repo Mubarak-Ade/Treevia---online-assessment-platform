@@ -22,7 +22,7 @@ export function LoginPage() {
 
     const onSubmit = (data: LoginFormValues) => {
         login(data);
-        navigate("dashboard")
+        navigate("/dashboard")
     };
 
 

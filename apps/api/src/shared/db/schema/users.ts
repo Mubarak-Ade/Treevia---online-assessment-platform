@@ -1,4 +1,6 @@
+import { relations } from 'drizzle-orm';
 import { pgEnum, pgTable, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
+import { assessments } from './assessment.js';
 
 export const userRoleEnum = pgEnum('user_role', ['educator', 'admin']);
 
@@ -11,6 +13,10 @@ export const users = pgTable('users', {
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
+
+export const userRelation = relations(users, ({many}) => ({
+    assessments: many(assessments)
+}))
 
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;

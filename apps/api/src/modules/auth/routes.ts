@@ -20,7 +20,6 @@ authRouter.post('/login', authRateLimiter, validateBody(loginSchema), authContro
 authRouter.post(
     '/refresh',
     authRateLimiter,
-    validateBody(refreshTokenSchema),
     authController.refresh,
 );
 

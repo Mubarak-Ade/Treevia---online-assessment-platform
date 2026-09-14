@@ -9,3 +9,5 @@ export * from './SearchInput';
 export * from './DataTable';
 export * from './FormField';
 export * from './ErrorBoundary';
+export * from './SubmissionPacingChart';
+export * from './IntegrityDonutChart';

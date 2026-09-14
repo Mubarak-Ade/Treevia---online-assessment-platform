@@ -10,18 +10,14 @@ export function useLogin() {
     const { setAuthenticatedUser } = useAuth();
 
     return useMutation({
-        mutationFn: (input: LoginInput) =>
-            authApi.login(input),
+        mutationFn: (input: LoginInput) => authApi.login(input),
 
         onSuccess: (data) => {
             tokenStore.set(data.accessToken);
 
             setAuthenticatedUser(data.user);
 
-            queryClient.setQueryData(
-                authKeys.me(),
-                data.user
-            );
+            queryClient.setQueryData(authKeys.me(), data.user);
         },
     });
 }
@@ -78,6 +74,7 @@ export function useLogout() {
              * you should clear those too.
              */
             queryClient.clear();
+            window.location.href = '/login';
         },
     });
 }

@@ -28,9 +28,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     const [status, setStatus] = useState<AuthStatus>('loading');
 
-    console.log('user', user);
-    console.log('status', status);
-
     useEffect(() => {
         let mounted = true;
 
@@ -59,7 +56,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
                 if (!mounted) return;
 
-                setUser(currentUser);
+                setUser({...currentUser});
 
                 queryClient.setQueryData(authKeys.me(), currentUser);
 
@@ -116,7 +113,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 }
 
 export function useAuthContext() {
-    console.log('this is auth context');
     const context = useContext(AuthContext);
 
     if (!context) {

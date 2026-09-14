@@ -6,16 +6,15 @@ import { env } from '../config/env.js';
 import { authRouter } from '../modules/auth/routes.js';
 import { AppError } from '../shared/errors/index.js';
 import { httpLogger } from '../shared/logger/index.js';
+import { assessmentRouter } from '../modules/assessments/routes.js';
+import { questionRouter } from '../modules/questions/routes.js';
+import { requireAuth } from '../shared/middleware/auth.middleware.js';
 
 export const app = express();
 
-// Security headers
 app.use(helmet());
-
-// HTTP request logger
 app.use(httpLogger);
 
-// CORS with credential support for cookies
 app.use(
     cors({
         origin: env.WEB_ORIGIN,
@@ -25,15 +24,14 @@ app.use(
     }),
 );
 
-// Body and Cookie parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(env.COOKIE_SECRET));
 
-// API Routes
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/assessments', requireAuth, assessmentRouter);
+app.use('/api/v1/questions', requireAuth, questionRouter);
 
-// 404 Handler
 app.use((_req: Request, res: Response) => {
     res.status(404).json({
         error: {
@@ -43,7 +41,6 @@ app.use((_req: Request, res: Response) => {
     });
 });
 
-// Centralized Error Handler
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     if (err instanceof AppError) {
         return res.status(err.statusCode).json({
@@ -55,7 +52,6 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
         });
     }
 
-    // Express JSON parse error
     if (err instanceof SyntaxError && 'body' in err) {
         return res.status(400).json({
             error: {
@@ -65,7 +61,6 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
         });
     }
 
-    // Unexpected internal errors
     console.error('Unhandled Server Error:', err);
 
     return res.status(500).json({
