@@ -20,3 +20,6 @@ export { questionSchema, questionUpdateSchema, questionReorderSchema, questionOp
 export type { QuestionInput, QuestionUpdateInput, QuestionReorderInput, QuestionOptionInput } from './question.js';
 export { questionTypeEnum } from './question.js';
 export type { QuestionTypeInput } from './question.js';
+
+export { createAttemptSchema, saveAnswerSchema, bulkSaveAnswersSchema, submitAttemptSchema } from './attempt.js';
+export type { CreateAttemptInput, SaveAnswerInput, BulkSaveAnswersInput, SubmitAttemptInput } from './attempt.js';

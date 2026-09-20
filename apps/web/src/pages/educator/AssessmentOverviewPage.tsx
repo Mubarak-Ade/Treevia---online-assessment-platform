@@ -1,11 +1,8 @@
-import * as React from 'react';
-import { useParams, Link } from 'react-router';
+import { useParams } from 'react-router';
 import {
     Clock,
     Award,
-    Users,
     HelpCircle,
-    CheckCircle2,
     Calendar,
     Share2,
     Shield,
@@ -14,39 +11,44 @@ import {
 import { MetricCard } from '@/components/shared/MetricCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { useAssessmentById } from '@/features/assessments/queries';
+import { useQuestions } from '@/features/questions/queries';
 
 export function AssessmentOverviewPage() {
     const { assessmentId } = useParams();
 
+    const { data: assessment } = useAssessmentById(assessmentId!);
+    const { data: questions } = useQuestions(assessmentId!);
+
+    const questionsCount = questions?.length ?? 0;
+    const totalPoints = questions?.reduce((sum, q) => sum + q.points, 0) ?? 0;
+
     return (
         <div className="space-y-6">
-            {/* 4 Metric Bento Cards */}
+            {/* Metric Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <MetricCard
                     title="Questions"
-                    value="20"
-                    subtext="Total points: 30"
+                    value={questionsCount}
+                    subtext={`Total points: ${totalPoints}`}
                     icon={<HelpCircle className="w-4 h-4" />}
                 />
                 <MetricCard
-                    title="Participants"
-                    value="120"
-                    subtext="+5 joined today"
-                    trend={{ value: "+4%", positive: true }}
-                    icon={<Users className="w-4 h-4" />}
+                    title="Time Limit"
+                    value={assessment ? `${assessment.durationMinutes}m` : '—'}
+                    subtext="Strict countdown"
+                    icon={<Clock className="w-4 h-4" />}
                 />
                 <MetricCard
-                    title="Submissions"
-                    value="110 / 120"
-                    subtext="91% completion rate"
-                    icon={<CheckCircle2 className="w-4 h-4" />}
-                />
-                <MetricCard
-                    title="Avg. Score"
-                    value="74%"
-                    subtext="Highest: 96%"
-                    trend={{ value: "+2.4%", positive: true }}
+                    title="Status"
+                    value={assessment?.status?.toUpperCase() ?? '—'}
                     icon={<Award className="w-4 h-4" />}
+                />
+                <MetricCard
+                    title="Grading"
+                    value="Auto"
+                    subtext="Auto-graded objective points"
+                    icon={<Shield className="w-4 h-4" />}
                 />
             </div>
 
@@ -63,7 +65,9 @@ export function AssessmentOverviewPage() {
                                     <Clock className="w-4 h-4 text-emerald-700 mt-0.5" />
                                     <div>
                                         <p className="font-semibold text-slate-800">Time Limit</p>
-                                        <p className="text-slate-500 mt-0.5">45 minutes strict countdown</p>
+                                        <p className="text-slate-500 mt-0.5">
+                                            {assessment ? `${assessment.durationMinutes} minutes strict countdown` : '—'}
+                                        </p>
                                     </div>
                                 </div>
 
@@ -78,8 +82,12 @@ export function AssessmentOverviewPage() {
                                 <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 flex items-start gap-3">
                                     <Calendar className="w-4 h-4 text-emerald-700 mt-0.5" />
                                     <div>
-                                        <p className="font-semibold text-slate-800">Availability Window</p>
-                                        <p className="text-slate-500 mt-0.5">Aug 31, 2026 — Sep 14, 2026</p>
+                                        <p className="font-semibold text-slate-800">Published</p>
+                                        <p className="text-slate-500 mt-0.5">
+                                            {assessment?.publishedAt
+                                                ? new Date(assessment.publishedAt).toLocaleDateString()
+                                                : 'Not yet published'}
+                                        </p>
                                     </div>
                                 </div>
 
@@ -112,12 +120,13 @@ export function AssessmentOverviewPage() {
                                     Student Join Code
                                 </p>
                                 <p className="text-xl font-mono font-bold text-emerald-900 mt-0.5">
-                                    DBX-4821
+                                    {assessment?.joinCode ?? '—'}
                                 </p>
                             </div>
 
                             <Button
-                                onClick={() => window.open('/join/DBX-4821', '_blank')}
+                                onClick={() => assessment && window.open(`/join/${assessment.joinCode}`, '_blank')}
+                                disabled={!assessment}
                                 className="w-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold gap-1.5 shadow-xs"
                             >
                                 <span>Open Student View</span>

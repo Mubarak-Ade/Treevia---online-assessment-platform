@@ -48,6 +48,16 @@ export class AssessmentRepository implements IAssessmentRepository {
         return joinCode;
     }
     /**
+     * find published assessment by join code (public lookup)
+     */
+    async findPublishedByJoinCode(code: string): Promise<Assessment | null> {
+        const [assessment] = await db
+            .select()
+            .from(assessments)
+            .where(and(eq(assessments.joinCode, code), eq(assessments.status, 'published')));
+        return assessment || null;
+    }
+    /**
      * update assessment by id
      */
     async update(data: Partial<NewAssessment>, assessmentId: string): Promise<Assessment> {
@@ -74,7 +84,7 @@ export class AssessmentRepository implements IAssessmentRepository {
         return assessment;
     }
     /**
-     * update status
+     * update status to published
      */
     async publish(assessmentId: string): Promise<Assessment> {
         const [assessment] = await db
@@ -88,7 +98,22 @@ export class AssessmentRepository implements IAssessmentRepository {
         return assessment;
     }
     /**
-     * update status
+     * update status to draft (unpublish)
+     */
+    async unpublish(assessmentId: string): Promise<Assessment> {
+        const [assessment] = await db
+            .update(assessments)
+            .set({
+                status: 'draft',
+                publishedAt: null,
+                updatedAt: new Date(),
+            })
+            .where(eq(assessments.id, assessmentId))
+            .returning();
+        return assessment;
+    }
+    /**
+     * update status to closed
      */
     async closed(assessmentId: string): Promise<Assessment> {
         const [assessment] = await db

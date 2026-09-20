@@ -64,7 +64,7 @@ export class AssessmentController {
             const assessmentId = req.params.id as string;
             const userId = req.user!.id;
             const result = await this.assessmentService.publish(assessmentId, userId);
-            res.status(201).json(result);
+            res.status(200).json(result);
         } catch (error) {
             next(error);
         }
@@ -75,7 +75,39 @@ export class AssessmentController {
             const assessmentId = req.params.id as string;
             const userId = req.user!.id;
             const result = await this.assessmentService.close(assessmentId, userId);
-            res.status(201).json(result);
+            res.status(200).json(result);
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    unpublish = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const assessmentId = req.params.id as string;
+            const userId = req.user!.id;
+            const result = await this.assessmentService.unpublish(assessmentId, userId);
+            res.status(200).json(result);
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    lookup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const joinCode = req.params.joinCode as string;
+            const result = await this.assessmentService.lookupByJoinCode(joinCode);
+            res.status(200).json(result);
+        } catch (error) {
+            next(error);
+        }
+    };
+
+    participants = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const assessmentId = req.params.id as string;
+            const userId = req.user!.id;
+            const result = await this.assessmentService.getParticipants(assessmentId, userId);
+            res.status(200).json(result);
         } catch (error) {
             next(error);
         }

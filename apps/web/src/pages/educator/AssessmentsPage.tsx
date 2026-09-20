@@ -5,6 +5,7 @@ import {
     Download,
     ChevronLeft,
     ChevronRight,
+    ChevronDown,
     Search,
     Filter,
     Edit3,
@@ -16,6 +17,7 @@ import {
     CheckCircle,
     AlertCircle,
     List,
+    X,
 } from 'lucide-react';
 import { PageHeader } from '@/components/shared/PageHeader';
 import { StatusBadge } from '@/components/shared/StatusBadge';
@@ -44,6 +46,8 @@ import {
     useAssessments,
     useDeleteAssessment,
     usePublishAssessment,
+    useUnpublishAssessment,
+    useCloseAssessment,
 } from '@/features/assessments/queries';
 import { SubmissionPacingChart } from '@/components/shared/SubmissionPacingChart';
 import { IntegrityDonutChart } from '@/components/shared/IntegrityDonutChart';
@@ -62,6 +66,8 @@ export function AssessmentsPage() {
     const { data: assessments, isLoading, error, refetch, isRefetching } = useAssessments();
     const deleteMutation = useDeleteAssessment();
     const publishMutation = usePublishAssessment();
+    const unpublishMutation = useUnpublishAssessment();
+    const closeMutation = useCloseAssessment();
 
     /* ── Filter & Sort State ──────────────────────── */
     const [search, setSearch] = React.useState('');
@@ -151,6 +157,28 @@ export function AssessmentsPage() {
             onError: () => {
                 setPublishingId(null);
                 toast.error('Failed to publish assessment');
+            },
+        });
+    };
+
+    const handleUnpublish = (id: string) => {
+        unpublishMutation.mutate(id, {
+            onSuccess: () => {
+                toast.success('Assessment unpublished');
+            },
+            onError: () => {
+                toast.error('Failed to unpublish assessment');
+            },
+        });
+    };
+
+    const handleClose = (id: string) => {
+        closeMutation.mutate(id, {
+            onSuccess: () => {
+                toast.success('Assessment closed');
+            },
+            onError: () => {
+                toast.error('Failed to close assessment');
             },
         });
     };
@@ -571,6 +599,32 @@ export function AssessmentsPage() {
                                                                 ) : (
                                                                     <ChevronUp className="w-3.5 h-3.5 text-emerald-600" />
                                                                 )}
+                                                            </Button>
+                                                        )}
+
+                                                        {/* Unpublish */}
+                                                        {item.status === 'published' && (
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon-sm"
+                                                                className="h-7 w-7"
+                                                                onClick={() => handleUnpublish(item.id)}
+                                                                title="Unpublish"
+                                                            >
+                                                                <ChevronDown className="w-3.5 h-3.5 text-amber-600" />
+                                                            </Button>
+                                                        )}
+
+                                                        {/* Close */}
+                                                        {item.status === 'published' && (
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon-sm"
+                                                                className="h-7 w-7"
+                                                                onClick={() => handleClose(item.id)}
+                                                                title="Close"
+                                                            >
+                                                                <X className="w-3.5 h-3.5 text-red-500" />
                                                             </Button>
                                                         )}
 

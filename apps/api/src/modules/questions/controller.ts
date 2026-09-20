@@ -19,6 +19,18 @@ export class QuestionController {
         }
     };
 
+    getQuestion = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const assessmentId = req.params.assessmentId as string;
+            const questionId = req.params.questionId as string;
+            const userId = req.user!.id;
+            const result = await this.questionService.getQuestion(assessmentId, userId, questionId);
+            res.status(200).json(result);
+        } catch (error) {
+            next(error);
+        }
+    };
+
     createQuestion = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const assessmentId = req.params.assessmentId as string;
@@ -60,8 +72,8 @@ export class QuestionController {
         try {
             const assessmentId = req.params.assessmentId as string;
             const userId = req.user!.id;
-            const result = await this.questionService.reorderQuestions(assessmentId, userId, req.body.order);
-            res.status(200).json(result);
+            await this.questionService.reorderQuestions(assessmentId, userId, req.body.questions);
+            res.status(200).json({ success: true, message: 'Questions reordered successfully' });
         } catch (error) {
             next(error);
         }

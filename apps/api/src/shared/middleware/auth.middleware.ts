@@ -17,6 +17,8 @@ declare global {
             attemptAuth?: {
                 attemptId: string;
                 tokenHash: string;
+                status: string;
+                startedAt: Date;
             };
         }
     }

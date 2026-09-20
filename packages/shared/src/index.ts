@@ -79,3 +79,9 @@ export class ValidationError extends AppError {
         super('VALIDATION_ERROR', message, 422, details);
     }
 }
+
+export class GoneError extends AppError {
+    constructor(message: string = 'Resource is no longer available', details?: unknown) {
+        super('GONE', message, 410, details);
+    }
+}

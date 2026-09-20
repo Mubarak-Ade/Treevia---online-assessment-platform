@@ -5,7 +5,7 @@ export type QuestionTypeInput = z.infer<typeof questionTypeEnum>;
 
 export const questionOptionSchema = z.object({
     optionText: z.string().trim().min(1, "Option text cannot be empty"),
-    isCorrect: z.number().int().min(0).max(1).default(0),
+    isCorrect: z.boolean().default(false),
     position: z.number().int().min(0).default(0),
 });
 
@@ -26,11 +26,15 @@ export const questionUpdateSchema = z.object({
 });
 
 export const questionReorderSchema = z.object({
-    order: z.array(z.string().uuid("Invalid question ID in order")).min(1, "Order must contain at least one question ID"),
+    questions: z.array(z.object({
+        id: z.uuid("Invalid question ID"),
+        position: z.number().int().min(0),
+    })).min(1, "Questions array must contain at least one item"),
 });
 
 export const questionParamsSchema = z.object({
-    questionId: z.string().uuid("Invalid question ID format"),
+    assessmentId: z.uuid("Invalid assessment ID format"),
+    questionId: z.uuid("Invalid question ID format"),
 });
 
 export type QuestionInput = z.infer<typeof questionSchema>

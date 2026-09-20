@@ -4,6 +4,8 @@ import { IQuestionRepository } from './types.js';
 import { IAssessmentRepository } from '../assessments/types.js';
 import { AssessmentRepository } from '../assessments/repository.js';
 import { QuestionRepository } from './repository.js';
+import { v7 as uuid } from 'uuid';
+import { db } from '../../shared/db/index.js';
 
 export class QuestionService {
     private questionRepository: IQuestionRepository;
@@ -22,14 +24,71 @@ export class QuestionService {
         return this.questionRepository.findByAssessmentId(assessmentId);
     }
 
-    async createQuestion(assessmentId: string, userId: string, data: NewQuestion, options: QuestionOption[]): Promise<Question> {
+    async getQuestion(assessmentId: string, userId: string, questionId: string): Promise<Question> {
         await this.checkOwnership(assessmentId, userId);
-        this.validateOptions(data.questionType, options);
-        return this.questionRepository.create(data, options);
+        const question = await this.questionRepository.findById(questionId, assessmentId);
+        if (!question) {
+            throw new NotFoundError('Question not found');
+        }
+        return question;
     }
 
-    async updateQuestion(questionId: string, userId: string, assessmentId: string, data: Partial<NewQuestion>, options?: QuestionOption[]): Promise<Question> {
-        const question = await this.questionRepository.findById(questionId);
+    async createQuestion(
+        assessmentId: string,
+        userId: string,
+        data: NewQuestion,
+        options: QuestionOption[],
+    ): Promise<Question> {
+        const assessment = await this.checkOwnership(assessmentId, userId);
+        if (assessment.status !== 'draft') {
+            throw new ConflictError('Cannot modify questions on a published or closed assessment');
+        }
+
+        return db.transaction(async (tx) => {
+            const question = await this.questionRepository.create(tx, {
+                ...data,
+                assessmentId,
+                id: uuid(),
+            });
+
+            if (!question) {
+                throw new BadRequestError('Failed to create question');
+            }
+
+            const optionValues = options.map((option) => ({
+                ...option,
+                id: uuid(),
+                questionId: question.id,
+            }));
+
+            this.validateOptions(data.questionType, optionValues);
+
+            const createdOptions = await this.questionRepository.addOptions(tx, optionValues);
+
+            if (createdOptions.length === 0) {
+                throw new BadRequestError('Failed to create question options');
+            }
+
+            const questionAndOptions = await this.questionRepository.findById(question.id, assessmentId, tx) as Question
+
+            return questionAndOptions;
+        });
+    }
+
+
+    async updateQuestion(
+        questionId: string,
+        userId: string,
+        assessmentId: string,
+        data: Partial<NewQuestion>,
+        options?: QuestionOption[],
+    ): Promise<Question> {
+        const assessment = await this.checkOwnership(assessmentId, userId);
+        if (assessment.status !== 'draft') {
+            throw new ConflictError('Cannot modify questions on a published or closed assessment');
+        }
+
+        const question = await this.questionRepository.findById(questionId, assessmentId);
         if (!question) {
             throw new NotFoundError('Question not found');
         }
@@ -39,11 +98,31 @@ export class QuestionService {
         if (options) {
             this.validateOptions(data.questionType || question.questionType, options);
         }
-        return this.questionRepository.update(data, questionId);
+
+        return db.transaction(async (tx) => {
+            await this.questionRepository.update(data, questionId, tx);
+
+            if (options) {
+                const optionValues = options.map((option) => ({
+                    ...option,
+                    id: option.id || uuid(),
+                    questionId,
+                }));
+                await this.questionRepository.replaceOptions(questionId, optionValues, tx);
+            }
+
+            const result = await this.questionRepository.findById(questionId, assessmentId, tx) as Question;
+            return result;
+        });
     }
 
     async deleteQuestion(questionId: string, userId: string, assessmentId: string): Promise<void> {
-        const question = await this.questionRepository.findById(questionId);
+        const assessment = await this.checkOwnership(assessmentId, userId);
+        if (assessment.status !== 'draft') {
+            throw new ConflictError('Cannot modify questions on a published or closed assessment');
+        }
+
+        const question = await this.questionRepository.findById(questionId, assessmentId);
         if (!question) {
             throw new NotFoundError('Question not found');
         }
@@ -53,12 +132,15 @@ export class QuestionService {
         await this.questionRepository.delete(questionId);
     }
 
-    async reorderQuestions(assessmentId: string, userId: string, order: string[]): Promise<void> {
-        await this.checkOwnership(assessmentId, userId);
-        await this.questionRepository.reorder(assessmentId, order);
+    async reorderQuestions(assessmentId: string, userId: string, questions: { id: string; position: number }[]): Promise<void> {
+        const assessment = await this.checkOwnership(assessmentId, userId);
+        if (assessment.status !== 'draft') {
+            throw new ConflictError('Cannot reorder questions on a published or closed assessment');
+        }
+        await this.questionRepository.reorder(assessmentId, questions);
     }
 
-    private async checkOwnership(assessmentId: string, userId: string): Promise<void> {
+    private async checkOwnership(assessmentId: string, userId: string) {
         const assessment = await this.assessmentRepository.findById(assessmentId);
         if (!assessment) {
             throw new NotFoundError('Assessment not found');
@@ -66,6 +148,7 @@ export class QuestionService {
         if (assessment.creator_id !== userId) {
             throw new ForbiddenError("You can't access this assessment");
         }
+        return assessment;
     }
 
     private validateOptions(questionType: string, options: QuestionOption[]): void {
@@ -75,7 +158,9 @@ export class QuestionService {
             }
             const correctCount = options.filter((o) => o.isCorrect).length;
             if (correctCount !== 1) {
-                throw new ConflictError('Multiple choice questions must have exactly 1 correct answer');
+                throw new ConflictError(
+                    'Multiple choice questions must have exactly 1 correct answer',
+                );
             }
         } else if (questionType === 'TRUE_FALSE') {
             if (options.length !== 2) {

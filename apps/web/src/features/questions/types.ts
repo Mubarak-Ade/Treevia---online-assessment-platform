@@ -3,7 +3,7 @@ export interface QuestionOption {
     questionId: string;
     optionText: string;
     position: number;
-    isCorrect: number;
+    isCorrect: boolean;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -17,6 +17,7 @@ export interface Question {
     position: number;
     createdAt: Date;
     updatedAt: Date;
+    options?: QuestionOption[];
 }
 
 export interface QuestionWithOptions extends Question {
@@ -30,7 +31,7 @@ export interface QuestionInput {
     position: number;
     options: {
         optionText: string;
-        isCorrect: number;
+        isCorrect: boolean;
         position: number;
     }[];
 }
@@ -42,11 +43,14 @@ export interface QuestionUpdateInput {
     position?: number;
     options?: {
         optionText: string;
-        isCorrect: number;
+        isCorrect: boolean;
         position: number;
     }[];
 }
 
 export interface QuestionReorderInput {
-    order: string[];
+    questions: {
+        id: string;
+        position: number;
+    }[];
 }

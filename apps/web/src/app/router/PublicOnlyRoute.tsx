@@ -6,7 +6,9 @@ export const PublicOnlyRoute = () => {
 
     if (status === "loading") return <div>Loading...</div>
 
-    if (status === "authenticated") return <Navigate to="/dashboard" replace />
+    if (status === "authenticated" && user?.role && user.role !== 'STUDENT') {
+        return <Navigate to="/dashboard" replace />
+    }
 
     return <Outlet />
 }

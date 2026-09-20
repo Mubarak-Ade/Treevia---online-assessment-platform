@@ -1,12 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { assessmentApi } from "./assessment.api"
+import { assessmentApi, Participant } from "./assessment.api"
 import { Assessment } from "./types"
 import { AssessmentInput } from "@treevia/validation"
 import { toast } from "sonner"
 
 export const assessmentKeys = {
     all: ['assessments'] as const,
-    byId: (id: string) => ['assessments', id] as const
+    byId: (id: string) => ['assessments', id] as const,
+    participants: (id: string) => ['assessments', id, 'participants'] as const,
 }
 
 export const useAssessments = () => {
@@ -66,5 +67,43 @@ export const usePublishAssessment = () => {
         onError: () => {
             toast.error("Failed to publish assessment")
         }
+    })
+}
+
+export const useUnpublishAssessment = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation<Assessment, Error, string>({
+        mutationFn: assessmentApi.unpublish,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: assessmentKeys.all })
+            toast.success("Assessment unpublished")
+        },
+        onError: () => {
+            toast.error("Failed to unpublish assessment")
+        }
+    })
+}
+
+export const useCloseAssessment = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation<Assessment, Error, string>({
+        mutationFn: assessmentApi.close,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: assessmentKeys.all })
+            toast.success("Assessment closed")
+        },
+        onError: () => {
+            toast.error("Failed to close assessment")
+        }
+    })
+}
+
+export const useParticipants = (assessmentId: string) => {
+    return useQuery<Participant[]>({
+        queryKey: assessmentKeys.participants(assessmentId),
+        queryFn: () => assessmentApi.getParticipants(assessmentId),
+        enabled: !!assessmentId,
     })
 }

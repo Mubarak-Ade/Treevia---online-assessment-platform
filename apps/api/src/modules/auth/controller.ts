@@ -72,11 +72,12 @@ export class AuthController {
 
     refresh = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const refreshToken = req.cookies?.[REFRESH_COOKIE_NAME] || req.body?.refreshToken;
+            const refreshToken = req.cookies?.[REFRESH_COOKIE_NAME]
 
+            console.log('[REFRESH] Incoming token:', refreshToken?.slice(0, 10));
             const clientMeta = this.extractClientMeta(req);
             const result = await this.authService.refresh(refreshToken, clientMeta);
-
+            console.log('[REFRESH] New token:', result.refreshToken.slice(0, 10));
             this.setRefreshCookie(res, result.refreshToken);
 
             res.status(200).json({

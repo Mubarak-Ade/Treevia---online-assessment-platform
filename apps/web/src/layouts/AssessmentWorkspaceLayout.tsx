@@ -11,38 +11,49 @@ import {
     Edit3,
     Eye,
     ArrowLeft,
-    Send,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/shared/StatusBadge';
+import { useAssessmentById } from '@/features/assessments/queries';
+import { useQuestions } from '@/features/questions/queries';
 
 export function AssessmentWorkspaceLayout() {
-    const { assessmentId = 'db-systems' } = useParams();
+    const { assessmentId } = useParams();
     const [copied, setCopied] = React.useState(false);
     const navigate = useNavigate();
 
-    // Mock assessment context details
-    const assessment = {
-        id: assessmentId,
-        title: 'Database Systems Midterm',
-        code: 'CS301',
-        joinCode: 'DBX-4821',
-        status: 'PUBLISHED',
-        questionsCount: 20,
-        participantsCount: 120,
-        durationMinutes: 45,
-    };
+    const { data: assessment, isLoading: assessmentLoading } = useAssessmentById(assessmentId!);
+    const { data: questions } = useQuestions(assessmentId!);
+
+    const questionsCount = questions?.length ?? 0;
 
     const handleCopyCode = () => {
+        if (!assessment) return;
         navigator.clipboard.writeText(assessment.joinCode);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
 
+    if (assessmentLoading) {
+        return (
+            <div className="flex items-center justify-center py-20">
+                <p className="text-sm text-slate-500">Loading assessment...</p>
+            </div>
+        );
+    }
+
+    if (!assessment) {
+        return (
+            <div className="flex items-center justify-center py-20">
+                <p className="text-sm text-slate-500">Assessment not found.</p>
+            </div>
+        );
+    }
+
     const tabs = [
         { label: 'Overview', href: `/assessments/${assessmentId}`, icon: LayoutDashboard, end: true },
-        { label: `Questions (${assessment.questionsCount})`, href: `/assessments/${assessmentId}/questions`, icon: HelpCircle },
-        { label: `Participants (${assessment.participantsCount})`, href: `/assessments/${assessmentId}/participants`, icon: Users },
+        { label: `Questions (${questionsCount})`, href: `/assessments/${assessmentId}/questions`, icon: HelpCircle },
+        { label: 'Participants', href: `/assessments/${assessmentId}/participants`, icon: Users },
         { label: 'Results', href: `/assessments/${assessmentId}/results`, icon: Award },
         { label: 'Analytics', href: `/assessments/${assessmentId}/analytics`, icon: BarChart2 },
     ];
@@ -84,16 +95,16 @@ export function AssessmentWorkspaceLayout() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <div className="flex items-center gap-2.5 flex-wrap">
-                            <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
-                                {assessment.code}
-                            </span>
                             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
                                 {assessment.title}
                             </h1>
                             <StatusBadge status={assessment.status} />
                         </div>
                         <p className="mt-1 text-xs text-slate-500">
-                            Duration: <span className="font-semibold text-slate-700">{assessment.durationMinutes} mins</span> · Created August 31, 2026
+                            Duration: <span className="font-semibold text-slate-700">{assessment.durationMinutes} mins</span>
+                            {assessment.publishedAt && (
+                                <> · Published {new Date(assessment.publishedAt).toLocaleDateString()}</>
+                            )}
                         </p>
                     </div>
 

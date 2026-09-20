@@ -36,6 +36,20 @@
       "when": 1789411354220,
       "tag": "0004_past_jackal",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1789467751314,
+      "tag": "0005_naive_domino",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1789812829366,
+      "tag": "0006_slow_meteorite",
+      "breakpoints": true
     }
   ]
 }

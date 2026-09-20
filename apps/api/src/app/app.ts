@@ -8,9 +8,15 @@ import { AppError } from '../shared/errors/index.js';
 import { httpLogger } from '../shared/logger/index.js';
 import { assessmentRouter } from '../modules/assessments/routes.js';
 import { questionRouter } from '../modules/questions/routes.js';
+import { attemptRouter } from '../modules/attempts/routes.js';
 import { requireAuth } from '../shared/middleware/auth.middleware.js';
+import { AssessmentController } from '../modules/assessments/controller.js';
+import { validateParams } from '../shared/validation/index.js';
+import { joinCodeParamsSchema } from '../modules/assessments/schema.js';
 
 export const app = express();
+
+const assessmentController = new AssessmentController();
 
 app.use(helmet());
 app.use(httpLogger);
@@ -29,8 +35,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(env.COOKIE_SECRET));
 
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/assessments/join/:joinCode', validateParams(joinCodeParamsSchema), assessmentController.lookup);
 app.use('/api/v1/assessments', requireAuth, assessmentRouter);
-app.use('/api/v1/questions', requireAuth, questionRouter);
+app.use('/api/v1/assessments/:assessmentId/questions', requireAuth, questionRouter);
+app.use('/api/v1/attempts', attemptRouter);
 
 app.use((_req: Request, res: Response) => {
     res.status(404).json({

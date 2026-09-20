@@ -6,8 +6,10 @@ export interface IAssessmentRepository {
     findById(id: string): Promise<Assessment>,
     findAll(userId: string): Promise<Assessment[]>,
     findByJoinCode(code: string): Promise<string>,
+    findPublishedByJoinCode(code: string): Promise<Assessment | null>,
     update(data: Partial<NewAssessment>, assessmentId: string): Promise<Assessment>,
     delete(assessmentId: string): Promise<Assessment>,
     publish(assessmentId: string): Promise<Assessment>,
+    unpublish(assessmentId: string): Promise<Assessment>,
     closed(assessmentId: string): Promise<Assessment>,
 }

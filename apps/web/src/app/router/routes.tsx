@@ -19,7 +19,8 @@ import { HomePage } from '@/pages/public/Home';
 import { LoginPage } from '@/pages/public/LoginPage';
 import { RegisterPage } from '@/pages/public/RegisterPage';
 import { JoinPage } from '@/pages/student/JoinPage';
-import { JoinCodeEntryPage } from '@/pages/student/JoinCodeEntryPage';
+import { ConfirmAssessmentPage } from '@/pages/student/ConfirmAssessmentPage';
+import { ParticipantDetailsPage } from '@/pages/student/ParticipantDetailsPage';
 import { AttemptInstructionsPage } from '@/pages/student/AttemptInstructionsPage';
 import { AttemptExamPage } from '@/pages/student/AttemptExamPage';
 import { AttemptSubmittedPage } from '@/pages/student/AttemptSubmittedPage';
@@ -46,14 +47,15 @@ export const routes = (
                     <Route path="participants" element={<AssessmentParticipantsPage />} />
                     <Route path="results" element={<AssessmentResultsPage />} />
                     <Route path="analytics" element={<AssessmentAnalyticsPage />} />
-                    <Route path="builder" element={<AssessmentBuilderPage />} />
                 </Route>
+                <Route path="/assessments/:assessmentId/builder" element={<AssessmentBuilderPage />} />
             </Route>
         </Route>
-        <Route element={<PublicOnlyRoute />}>
+        <Route>
             <Route path="/join" element={<JoinPage />} />
-            <Route path="/join/:joinCode" element={<JoinCodeEntryPage />} />
-            <Route path="/attempt/:attemptId/instructions" element={<AttemptInstructionsPage />} />
+            <Route path="/join/:joinCode" element={<ConfirmAssessmentPage />} />
+            <Route path="/join/:joinCode/details" element={<ParticipantDetailsPage />} />
+            <Route path="/join/:joinCode/instructions" element={<AttemptInstructionsPage />} />
             <Route path="/attempt/:attemptId" element={<AttemptExamPage />} />
             <Route path="/attempt/:attemptId/submitted" element={<AttemptSubmittedPage />} />
             <Route path="/attempt/:attemptId/result" element={<AttemptResultPage />} />
